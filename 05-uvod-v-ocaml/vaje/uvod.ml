@@ -8,7 +8,11 @@
  - : int = 4
 [*----------------------------------------------------------------------------*)
 
-let rec square = ()
+let rec square x = x * x
+
+let square x = x * x
+
+let square = (fun x -> x * x)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [middle_of_triple] vrne srednji element trojice.
@@ -17,7 +21,16 @@ let rec square = ()
  - : bool = false
 [*----------------------------------------------------------------------------*)
 
-let rec middle_of_triple = ()
+let rec middle_of_triple triple =
+  match triple with
+  | (x, y, z) -> y 
+
+let middle_of_triple = function
+  | (x, y, z) -> y
+
+let middle_of_triple (x, y, z) = y
+
+let middle_of_triple (_, y, _) = y
 
 (*----------------------------------------------------------------------------*]
  Funkcija [starting_element] vrne prvi element danega seznama. V primeru
@@ -27,7 +40,19 @@ let rec middle_of_triple = ()
  - : int = 1
 [*----------------------------------------------------------------------------*)
 
-let rec starting_element = ()
+let rec starting_element list =
+  match list with
+  | [] -> failwith "Empty list has no starting element."
+  | x :: xs -> x
+
+let starting_element = function
+  | [] -> failwith "Empty list has no starting element."
+  | x :: xs -> x
+
+(* let starting_element (x :: xs) = x *)
+
+let _ = assert (starting_element [1; 2; 3; 4] = 1)
+
 
 (*----------------------------------------------------------------------------*]
  Funkcija [multiply] zmnoži vse elemente seznama. V primeru praznega seznama
@@ -37,7 +62,10 @@ let rec starting_element = ()
  - : int = 48
 [*----------------------------------------------------------------------------*)
 
-let rec multiply = ()
+let rec multiply list =
+  match list with
+  | [] -> 1
+  | x :: xs -> x * multiply xs 
 
 (*----------------------------------------------------------------------------*]
  Napišite funkcijo ekvivalentno python kodi:
@@ -54,7 +82,17 @@ let rec multiply = ()
  - : int list = [-1; 7; 0]
 [*----------------------------------------------------------------------------*)
 
-let rec sum_int_pairs = ()
+let rec sum_int_pairs pair_list =
+  match pair_list with
+  | [] -> []
+  | el :: els -> (
+    match el with
+    | (x, y) -> (x + y) :: sum_int_pairs els
+  )
+
+let rec sum_int_pairs = function
+  | [] -> []
+  | (x, y) :: els -> (x + y) :: sum_int_pairs els
 
 (*----------------------------------------------------------------------------*]
  Funkcija [get k list] poišče [k]-ti element v seznamu [list]. Številčenje
@@ -65,7 +103,29 @@ let rec sum_int_pairs = ()
  - : int = 1
 [*----------------------------------------------------------------------------*)
 
-let rec get = ()
+let rec get k list =
+  if k <= 0 then
+    match list with
+    | [] -> failwith "List too short."
+    | x :: xs -> x
+  else
+    match list with
+    | [] -> failwith "List too short."
+    | x :: xs -> get (k - 1) xs
+
+let rec get k list =
+  match list with
+  | [] -> failwith "List too short."
+  | x :: xs ->
+      if k <= 0 then
+        x
+      else
+        get (k-1) xs
+
+let rec get k list =
+  match list with
+  | [] -> failwith "List too short."
+  | x :: xs -> if k <= 0 then x else get (k-1) xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [double] podvoji pojavitve elementov v seznamu.
@@ -74,7 +134,9 @@ let rec get = ()
  - : int list = [1; 1; 2; 2; 3; 3]
 [*----------------------------------------------------------------------------*)
 
-let rec double = ()
+let rec double = function 
+  | [] -> []
+  | x :: xs -> x :: x :: double xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [insert x k list] na [k]-to mesto seznama [list] vrine element [x].
@@ -86,7 +148,21 @@ let rec double = ()
  - : int list = [1; 0; 0; 0; 0; 0]
 [*----------------------------------------------------------------------------*)
 
-let rec insert = ()
+let rec insert x k list =
+  match list with
+  | [] -> [x] (* x::[] *)
+  | y :: ys ->
+      if k <= 0 then
+        x :: y :: ys
+      else
+        y :: (insert x (k-1) ys)
+
+(* Malo ekstra *)
+let rec insert x k = function
+  | [] -> [x]
+  | y :: ys when k <= 0 -> x :: y :: ys
+  | y :: ys (* when k > 0 *) -> y :: (insert x (k-1) ys)
+
 
 (*----------------------------------------------------------------------------*]
  Funkcija [divide k list] seznam razdeli na dva seznama. Prvi vsebuje prvih [k]
